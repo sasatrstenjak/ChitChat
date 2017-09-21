@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!--Ime projekta, spremeni-->
-    <groupId>my.group.chitchat</groupId>
-    <artifactId>chitchat-starter</artifactId>
+    <groupId>si.trstenjak.chitchat</groupId>
+    <artifactId>chitchat-client</artifactId>
     <name>chitchat-starter</name>
 
 

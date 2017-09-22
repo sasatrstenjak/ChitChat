@@ -11,6 +11,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -42,7 +46,6 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 	private JTextField ime_input;
 	private JLabel ime_label;
 	private JTextField prejemnik_input;
-	private JLabel uporabniki_label;
 	
 	private JButton gumb_prijava;
 	private JButton gumb_odjava;
@@ -51,7 +54,8 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 	public String prejemnik;
 	public Boolean javno;
 	public Boolean online;
-	public JTextArea uporabniki;
+	//public JTextArea uporabniki_izpis;
+	public JList<Uporabnik> uporabniki;
 	
 	public ChatFrame() {
 		super(); //pokliče konstruktor od JFrame
@@ -143,27 +147,7 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 		
 		
 		///// UPORABNIKI /////
-		
-		this.uporabniki = new JTextArea(20, 20);
-		JScrollPane drsnik_uporabniki = new JScrollPane(uporabniki);
-		
-		GridBagConstraints uporabniki_gbc = new GridBagConstraints();
-		uporabniki_gbc.fill = GridBagConstraints.BOTH;
-		uporabniki_gbc.gridx = 3;
-        uporabniki_gbc.gridy = 0;
-        uporabniki_gbc.weightx= 1.0;
-        uporabniki_gbc.weighty= 1.0;
-        uporabniki_gbc.insets = new Insets (10, 10, 10, 10);
-        pane.add(drsnik_uporabniki, uporabniki_gbc);
-		
-        this.uporabniki_label = new JLabel("Uporabniki:");
-		GridBagConstraints uporabniki_label_gbc = new GridBagConstraints();
-		uporabniki_label_gbc.gridx = 3;
-		uporabniki_label_gbc.gridy =0;
-		uporabniki_label_gbc.insets = new Insets (10, 10, 10, 10);
-		uporabniki_label_gbc.anchor =GridBagConstraints.NORTH;
-		pane.add(uporabniki_label,  uporabniki_label_gbc);
-		
+		uporabniki = new JList<Uporabnik>();
 		
 	}
 
@@ -180,6 +164,7 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 		String chat = this.output.getText();
 		this.output.setText(chat + posiljatelj + ":" + besedilo + "\n");
 	}
+	
 	
 	public void keyTyped(KeyEvent e) {
 		if (e.getSource() == this.ime_input) {
@@ -252,4 +237,3 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 	
 
 }
-	

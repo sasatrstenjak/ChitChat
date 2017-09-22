@@ -15,27 +15,23 @@ import org.apache.http.entity.ContentType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+
 
 public class Povezava {
 	
-	public static List<String> seznam_uporabnikov(List<Uporabnik> uporabniki){
-		List<String> imena = new ArrayList<String>();
-		for (Uporabnik x : uporabniki){
-			imena.add(x.getUsername());
-		}
-		return imena;
-	}
-	
-	public static ArrayList<Uporabnik> prisotni() throws ClientProtocolException, IOException{
+	public static ArrayList<Uporabnik> uporabniki()
+			throws ClientProtocolException, IOException, URISyntaxException {
 		String responseBody = Request.Get("http://chitchat.andrej.com/users").execute().returnContent().asString();
+
 		ObjectMapper mapper = new ObjectMapper();
-		TypeReference<List<Uporabnik>> t = new TypeReference<List<Uporabnik>>(){
+		TypeReference<List<Uporabnik>> t = new TypeReference<List<Uporabnik>>() {
 		};
-		ArrayList<Uporabnik> prisotni = mapper.readValue(responseBody,  t);
-		return prisotni;	
+		
+		ArrayList<Uporabnik> uporabniki = mapper.readValue(responseBody, t);
+		return uporabniki;
 	}
 	
+	///// Prijava in odjava /////
 	
 	public static void prijavi(String ime) {
 		String time = Long.toString(new Date().getTime());
@@ -81,8 +77,10 @@ public class Povezava {
 	}
 	
 	
+	///// Prejemanje sporočil /////
 	
-	public static List<Sporocilo> prejmi(String ime) throws URISyntaxException, ClientProtocolException, IOException{
+	public static List<Sporocilo> prejmi(String ime)
+			throws URISyntaxException, ClientProtocolException, IOException{
 		String time = Long.toString(new Date().getTime());
 		
 		ObjectMapper mapper = new ObjectMapper(); //ObjectMapper: pretvarja JSON stringe v Java objekte in obratno
@@ -99,6 +97,7 @@ public class Povezava {
 	}
 	
 	
+	////// Pošiljanje sporočil /////
 	
 	public static void poslji(Boolean javno, String prejemnik, String posiljatelj, String besedilo) {
 		String time = Long.toString(new Date().getTime());
@@ -109,6 +108,7 @@ public class Povezava {
 			uri = new URIBuilder("http://chitchat.andrej.com/messages")
 					.addParameter("username", posiljatelj).addParameter("stop-cache", time)
 					.build();
+			
 			Sporocilo sporocilo = new Sporocilo (javno, prejemnik, besedilo);
 			String jsonSporocilo = mapper.writeValueAsString(sporocilo);
 			responseBody = Request.Post(uri).bodyString(jsonSporocilo, ContentType.APPLICATION_JSON)

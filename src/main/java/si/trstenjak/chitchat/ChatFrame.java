@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import javax.swing.JScrollPane;
 
 import java.awt.Insets;
 import javax.swing.JButton;
-
+import si.trstenjak.chitchat.*;
 
 public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 
@@ -62,7 +63,7 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 		this.ime = System.getProperty("user.name");
 		this.online = false;
 		
-		Container pane = getContentPane();
+		Container pane = this.getContentPane();
 		setTitle("Klepetalnik");
 		pane.setLayout(new GridBagLayout());
 		//this.setMinimumSize(new Dimension(500, 500));
@@ -104,7 +105,6 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 		
 		GridBagConstraints gumb_prijava_gbc = new GridBagConstraints();
 		gumb_prijava_gbc.gridx = 0;
-		//gumb_prijava_gbc.gridy = 0;
 		gumb_prijava_gbc.anchor =GridBagConstraints.NORTH;
 		gumb_prijava_gbc.insets = new Insets (10, 10, 10, 10);
 		pane.add(gumb_prijava, gumb_prijava_gbc);
@@ -144,6 +144,12 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 		pane.add(prejemnik_input, posiljatelj_input_gbc);
 		prejemnik_input.addKeyListener(this);
 		
+		JLabel prejemnik_label = new JLabel("Prejemnik:");
+		GridBagConstraints prejemnik_label_gbc = new GridBagConstraints();
+		prejemnik_label_gbc.gridx = 0;
+		prejemnik_label_gbc.gridy = 2;
+		prejemnik_label_gbc.insets = new Insets (10, 10, 10, 10);
+		pane.add(prejemnik_label, prejemnik_label_gbc);
 		
 		
 		///// UPORABNIKI /////
@@ -163,6 +169,21 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 	public void receiveMessage(String posiljatelj, String besedilo){
 		String chat = this.output.getText();
 		this.output.setText(chat + posiljatelj + ":" + besedilo + "\n");
+	}
+	
+	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == this.gumb_prijava && this.ime_input.getText().equals("")){
+			Povezava.prijavi(this.ime);
+			this.online = true;
+		} else if (e.getSource() == this.gumb_prijava){
+			this.ime= this.ime_input.getText();
+			Povezava.prijavi(this.ime);
+			this.online = true;
+		} else if (e.getSource() == this.gumb_odjava){
+			Povezava.odjavi(this.ime);
+			this.online = false;
+		}
 	}
 	
 	
@@ -219,20 +240,7 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 		
 	}
 
-	public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == this.gumb_prijava && this.ime_input.getText().equals("")){
-				Povezava.prijavi(this.ime);
-				this.online = true;
-			} else if (e.getSource() == this.gumb_prijava){
-				this.ime= this.ime_input.getText();
-				Povezava.prijavi(this.ime);
-				this.online = true;
-			} else if (e.getSource() == this.gumb_odjava){
-				Povezava.odjavi(this.ime);
-				this.online = false;
-			}
-	}
-		
+
 		
 	
 

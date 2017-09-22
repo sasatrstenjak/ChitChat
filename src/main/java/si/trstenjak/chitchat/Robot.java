@@ -1,5 +1,5 @@
 package si.trstenjak.chitchat;
-
+import si.trstenjak.chitchat.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;

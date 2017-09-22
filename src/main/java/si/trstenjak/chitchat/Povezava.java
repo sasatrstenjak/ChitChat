@@ -15,7 +15,9 @@ import org.apache.http.entity.ContentType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
+import si.trstenjak.chitchat.*;
 
 public class Povezava {
 	
@@ -81,18 +83,19 @@ public class Povezava {
 	
 	public static List<Sporocilo> prejmi(String ime)
 			throws URISyntaxException, ClientProtocolException, IOException{
-		String time = Long.toString(new Date().getTime());
 		
+		String time = Long.toString(new Date().getTime());
 		ObjectMapper mapper = new ObjectMapper(); //ObjectMapper: pretvarja JSON stringe v Java objekte in obratno
 		URI uri = new URIBuilder("http://chitchat.andrej.com/messages")
 				.addParameter("username", ime).addParameter("stop-cache", time)
 				.build();
 		
 		String responseBody = Request.Get(uri).execute().returnContent().asString();
-		TypeReference<List<Sporocilo>> t = new TypeReference<List<Sporocilo>>() {
-		};
-		
-		List<Sporocilo> prejeto = mapper.readValue(responseBody, t);
+			mapper.setDateFormat(new ISO8601DateFormat());
+			TypeReference<List<Sporocilo>> t = new TypeReference<List<Sporocilo>>() {
+			};
+			List<Sporocilo> prejeto = mapper.readValue(responseBody, t);
+			
 		return prejeto;		
 	}
 	
@@ -111,11 +114,13 @@ public class Povezava {
 			
 			Sporocilo sporocilo = new Sporocilo (javno, prejemnik, besedilo);
 			String jsonSporocilo = mapper.writeValueAsString(sporocilo);
-			responseBody = Request.Post(uri).bodyString(jsonSporocilo, ContentType.APPLICATION_JSON)
+			
+			responseBody = Request.Post(uri).
+					bodyString(jsonSporocilo, ContentType.APPLICATION_JSON)
 					.execute().returnContent().asString();
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
-			e.getMessage();
+			System.out.println(e.getMessage());
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

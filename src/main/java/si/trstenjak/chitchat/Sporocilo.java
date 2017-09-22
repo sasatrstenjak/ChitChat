@@ -1,5 +1,5 @@
 package si.trstenjak.chitchat;
-
+import si.trstenjak.chitchat.*;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

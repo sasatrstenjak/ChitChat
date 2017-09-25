@@ -12,12 +12,10 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
-import si.trstenjak.chitchat.*;
 
 public class Povezava {
 	
@@ -28,7 +26,7 @@ public class Povezava {
 		ObjectMapper mapper = new ObjectMapper();
 		TypeReference<List<Uporabnik>> t = new TypeReference<List<Uporabnik>>() {
 		};
-		
+		mapper.setDateFormat(new ISO8601DateFormat());
 		ArrayList<Uporabnik> uporabniki = mapper.readValue(responseBody, t);
 		return uporabniki;
 	}
@@ -91,10 +89,11 @@ public class Povezava {
 				.build();
 		
 		String responseBody = Request.Get(uri).execute().returnContent().asString();
-			mapper.setDateFormat(new ISO8601DateFormat());
-			TypeReference<List<Sporocilo>> t = new TypeReference<List<Sporocilo>>() {
-			};
-			List<Sporocilo> prejeto = mapper.readValue(responseBody, t);
+		mapper.setDateFormat(new ISO8601DateFormat());
+		TypeReference<List<Sporocilo>> t = new TypeReference<List<Sporocilo>>() {
+		};
+			
+		List<Sporocilo> prejeto = mapper.readValue(responseBody, t);
 			
 		return prejeto;		
 	}
@@ -102,36 +101,37 @@ public class Povezava {
 	
 	////// Pošiljanje sporočil /////
 	
-	public static void poslji(Boolean javno, String prejemnik, String posiljatelj, String besedilo) {
-		String time = Long.toString(new Date().getTime());
+	public static void poslji_javno(String posiljatelj, String besedilo) throws URISyntaxException, ClientProtocolException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		URI uri;
-		String responseBody = null;
-		try {
-			uri = new URIBuilder("http://chitchat.andrej.com/messages")
-					.addParameter("username", posiljatelj).addParameter("stop-cache", time)
-					.build();
-			
-			Sporocilo sporocilo = new Sporocilo (javno, prejemnik, besedilo);
-			String jsonSporocilo = mapper.writeValueAsString(sporocilo);
-			
-			responseBody = Request.Post(uri).
-					bodyString(jsonSporocilo, ContentType.APPLICATION_JSON)
-					.execute().returnContent().asString();
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String time = Long.toString(new Date().getTime());
 		
+		URI uri = new URIBuilder("http://chitchat.andrej.com/messages")
+				.addParameter("username", posiljatelj).addParameter("stop-cache", time)
+				.build();
+		
+		Sporocilo sporocilo = new Sporocilo (true, besedilo);
+		String jsonSporocilo = mapper.writeValueAsString(sporocilo);
+		
+		String responseBody = Request.Post(uri).
+				bodyString(jsonSporocilo, ContentType.APPLICATION_JSON)
+				.execute().returnContent().asString();
+		System.out.println(responseBody);
+	}
+	
+	public static void poslji_zasebno(String posiljatelj, String prejemnik, String besedilo) throws URISyntaxException, ClientProtocolException, IOException{
+		ObjectMapper mapper = new ObjectMapper();
+		String time = Long.toString(new Date().getTime());
+		
+		URI uri = new URIBuilder("http://chitchat.andrej.com/messages")
+				.addParameter("username", posiljatelj).addParameter("stop-cache", time)
+				.build();
+		
+		Sporocilo sporocilo = new Sporocilo (false, posiljatelj, prejemnik, besedilo);
+		String jsonSporocilo = mapper.writeValueAsString(sporocilo);
+		
+		String responseBody = Request.Post(uri).
+				bodyString(jsonSporocilo, ContentType.APPLICATION_JSON)
+				.execute().returnContent().asString();
 		System.out.println(responseBody);
 	}
 }

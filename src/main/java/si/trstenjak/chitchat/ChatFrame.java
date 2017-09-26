@@ -198,7 +198,8 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener, Wi
 					addMessage(posiljatelj, besedilo);
 				}
 				else {
-					//besedilo = "Privatno sporocilo od" + s.getPosiljatelj() + s.getBesedilo();
+					besedilo = s.getBesedilo();
+					posiljatelj = "*" + s.getPosiljatelj() + "*";
 					addMessage(posiljatelj, besedilo);
 				}
 			}
@@ -210,21 +211,15 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener, Wi
 		Robot robot = new Robot(this);
 		if (e.getSource() == this.gumb_prijava && this.ime_input.getText().equals("")){
 			Povezava.prijavi(this.ime);
-			//this.gumb_prijava.setEnabled(false);
-			//this.gumb_odjava.setEnabled(true);
 			this.online = true;
 			robot.activate();
 		} else if (e.getSource() == this.gumb_prijava){
 			this.ime= this.ime_input.getText();
 			Povezava.prijavi(this.ime);
-			//this.gumb_prijava.setEnabled(false);
-			//this.gumb_odjava.setEnabled(true);
 			this.online = true;
 			robot.activate();
 		} else if (e.getSource() == this.gumb_odjava){
 			Povezava.odjavi(this.ime);
-			//this.gumb_odjava.setEnabled(false);
-			//this.gumb_prijava.setEnabled(true);
 			this.online = false;
 		}
 	}

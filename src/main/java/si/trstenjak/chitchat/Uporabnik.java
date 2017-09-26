@@ -8,6 +8,7 @@ public class Uporabnik {
 	private String username;
 	private Date lastActive;
 	
+	public Uporabnik() { }
 	
 	public Uporabnik(String username, Date lastActive) {
 		this.username = username;

@@ -109,7 +109,7 @@ public class Povezava {
 				.addParameter("username", posiljatelj).addParameter("stop-cache", time)
 				.build();
 		
-		Sporocilo sporocilo = new Sporocilo (true, besedilo);
+		Sporocilo sporocilo = new Sporocilo (posiljatelj, besedilo);
 		String jsonSporocilo = mapper.writeValueAsString(sporocilo);
 		
 		String responseBody = Request.Post(uri).
@@ -126,7 +126,7 @@ public class Povezava {
 				.addParameter("username", posiljatelj).addParameter("stop-cache", time)
 				.build();
 		
-		Sporocilo sporocilo = new Sporocilo (false, posiljatelj, prejemnik, besedilo);
+		Sporocilo sporocilo = new Sporocilo (posiljatelj, prejemnik, besedilo);
 		String jsonSporocilo = mapper.writeValueAsString(sporocilo);
 		
 		String responseBody = Request.Post(uri).

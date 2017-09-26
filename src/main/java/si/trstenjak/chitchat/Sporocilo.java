@@ -15,23 +15,15 @@ public class Sporocilo { //objekt Sporocilo z atributi javno, prejemnik, ..
 	public Sporocilo() {
 	}
 	
-
-	public Sporocilo(Boolean javno, String besedilo) {
-		super();
-		this.global = javno;
+	public Sporocilo(String posiljatelj, String besedilo){
+		this.global = true;
+		this.sender = posiljatelj;
 		this.text = besedilo;
 	}
 	
 	
-	public Sporocilo(Boolean javno, String prejemnik, String besedilo){
-		this.global = javno;
-		this.recipient = prejemnik;
-		this.text = besedilo;
-	}
-	
-	
-	public Sporocilo(Boolean javno, String posiljatelj, String prejemnik, String besedilo){
-		this.global = javno;
+	public Sporocilo(String posiljatelj, String prejemnik, String besedilo){
+		this.global = false;
 		this.sender = posiljatelj;
 		this.recipient = prejemnik;
 		this.text = besedilo;

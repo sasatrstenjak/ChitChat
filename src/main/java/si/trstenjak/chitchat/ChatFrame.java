@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ import javax.swing.JScrollPane;
 import java.awt.Insets;
 import javax.swing.JButton;
 
-public class ChatFrame extends JFrame implements ActionListener, KeyListener {
+public class ChatFrame extends JFrame implements ActionListener, KeyListener, WindowListener {
 
 	/**
 	 * 
@@ -40,8 +42,8 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 	private JLabel ime_label;
 	private JTextField prejemnik_input;
 	
-	private JButton gumb_prijava;
-	private JButton gumb_odjava;
+	public JButton gumb_prijava;
+	public JButton gumb_odjava;
 	
 	public String ime;
 	public String prejemnik;
@@ -167,7 +169,8 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 		uporabniki_label_gbc.insets = new Insets (10, 10, 10, 10);
 		pane.add(uporabniki_label, uporabniki_label_gbc);
 	}
-
+	
+	
 	public void izpisiPrijavljene () throws ClientProtocolException, IOException, URISyntaxException {
 		ArrayList<Uporabnik> uporabniki = Povezava.uporabniki();
 		for (Uporabnik x : uporabniki) {
@@ -195,7 +198,7 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 					addMessage(posiljatelj, besedilo);
 				}
 				else {
-					besedilo = "Privatno sporocilo od" + s.getPosiljatelj() + s.getBesedilo();
+					//besedilo = "Privatno sporocilo od" + s.getPosiljatelj() + s.getBesedilo();
 					addMessage(posiljatelj, besedilo);
 				}
 			}
@@ -207,21 +210,21 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 		Robot robot = new Robot(this);
 		if (e.getSource() == this.gumb_prijava && this.ime_input.getText().equals("")){
 			Povezava.prijavi(this.ime);
-			this.gumb_prijava.setEnabled(false);
-			this.gumb_odjava.setEnabled(true);
+			//this.gumb_prijava.setEnabled(false);
+			//this.gumb_odjava.setEnabled(true);
 			this.online = true;
 			robot.activate();
 		} else if (e.getSource() == this.gumb_prijava){
 			this.ime= this.ime_input.getText();
 			Povezava.prijavi(this.ime);
-			this.gumb_prijava.setEnabled(false);
-			this.gumb_odjava.setEnabled(true);
+			//this.gumb_prijava.setEnabled(false);
+			//this.gumb_odjava.setEnabled(true);
 			this.online = true;
 			robot.activate();
 		} else if (e.getSource() == this.gumb_odjava){
 			Povezava.odjavi(this.ime);
-			this.gumb_odjava.setEnabled(false);
-			this.gumb_prijava.setEnabled(true);
+			//this.gumb_odjava.setEnabled(false);
+			//this.gumb_prijava.setEnabled(true);
 			this.online = false;
 		}
 	}
@@ -283,6 +286,51 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener {
 
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void windowClosing(WindowEvent e) {
+		if (this.ime != null) {
+			Povezava.odjavi(this.ime);
+			e.getWindow().dispose();
+		}
+		
 		
 	}
 

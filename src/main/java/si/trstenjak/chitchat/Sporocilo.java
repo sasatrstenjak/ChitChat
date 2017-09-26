@@ -1,5 +1,7 @@
 package si.trstenjak.chitchat;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Sporocilo { //objekt Sporocilo z atributi javno, prejemnik, ..
@@ -8,6 +10,7 @@ public class Sporocilo { //objekt Sporocilo z atributi javno, prejemnik, ..
 	private String recipient;
 	private String sender;
 	private String text;
+	private Date sentAt;
 	
 	public Sporocilo() {
 	}
@@ -38,7 +41,7 @@ public class Sporocilo { //objekt Sporocilo z atributi javno, prejemnik, ..
 		return "[global=" + global + ", recipient=" + recipient + ", sender=" + sender + ", text=" + text + "]";
 	}
 	
-	@JsonProperty("javno")
+	@JsonProperty("global")
 	public Boolean isJavno() {
 		return global;
 	}
@@ -47,7 +50,7 @@ public class Sporocilo { //objekt Sporocilo z atributi javno, prejemnik, ..
 		this.global = javno;
 	}
 	
-	@JsonProperty("prejemnik")
+	@JsonProperty("recipient")
 	public String getPrejemnik() {
 		return recipient;
 	}
@@ -56,7 +59,7 @@ public class Sporocilo { //objekt Sporocilo z atributi javno, prejemnik, ..
 		this.recipient = prejemnik;
 	}
 	
-	@JsonProperty("posiljatelj")
+	@JsonProperty("sender")
 	public String getPosiljatelj() {
 		return sender;
 	}
@@ -65,12 +68,21 @@ public class Sporocilo { //objekt Sporocilo z atributi javno, prejemnik, ..
 		this.sender = posiljatelj;
 	}
 	
-	@JsonProperty("besedilo")
+	@JsonProperty("text")
 	public String getBesedilo() {
 		return text;
 	}
 	
 	public void setBesedilo(String besedilo){
 		this.text = besedilo;
+	}
+	
+	@JsonProperty("sent_at")
+	public Date getSentAt() {
+		return sentAt;
+	}
+
+	public void setSentAt(Date sentAt) {
+		this.sentAt = sentAt;
 	}
 }

@@ -27,6 +27,8 @@ public class Robot extends TimerTask {
 	public void run() {
 		if (chat.online == true) {
 			try {
+				chat.gumb_prijava.setEnabled(false);
+				chat.gumb_odjava.setEnabled(true);
 				chat.receiveMessage();
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
@@ -52,6 +54,11 @@ public class Robot extends TimerTask {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}*/
+		}
+		
+		else {
+			chat.gumb_odjava.setEnabled(false);
+			chat.gumb_prijava.setEnabled(true);
 		}
 	}
 }

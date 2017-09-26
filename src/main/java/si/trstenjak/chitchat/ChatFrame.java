@@ -179,29 +179,17 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener, Wi
 			
 		}
 	}
-	public void addMessage(String posiljatelj, String besedilo)
+	public void addMessage(Sporocilo s)
 			throws ClientProtocolException, URISyntaxException, IOException {
 		String chat = this.output.getText();
-		this.output.setText(chat + posiljatelj + ": " + besedilo + "\n");
+		String prejemnik = (s.isJavno() ? "ALL" : s.getPrejemnik());
+		this.output.setText(chat + s.getPosiljatelj() + " -> " + prejemnik + ": " + s.getBesedilo() + "\n");
 	}
 	
 	
-	public void receiveMessage() throws ClientProtocolException, URISyntaxException, IOException{
-		List<Sporocilo> prejeta_sporocila = Povezava.prejmi(this.ime);
-		
-		if (!prejeta_sporocila.isEmpty()){
-			for (Sporocilo s : prejeta_sporocila){
-				String besedilo = null;
-				String posiljatelj = s.getPosiljatelj();
-				if (s.isJavno()) {
-					besedilo = s.getBesedilo();
-					addMessage(posiljatelj, besedilo);
-				}
-				else {
-					//besedilo = "Privatno sporocilo od" + s.getPosiljatelj() + s.getBesedilo();
-					addMessage(posiljatelj, besedilo);
-				}
-			}
+	public void receiveMessage() throws ClientProtocolException, URISyntaxException, IOException {
+		for (Sporocilo s : Povezava.prejmi(this.ime)){
+				addMessage(s);
 		}
 	}
 	
@@ -242,7 +230,7 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener, Wi
 			if (e.getKeyChar() == '\n'){
 				if (this.prejemnik_input.getText().equals("")) {
 					try {
-						addMessage(this.ime, besedilo);
+						addMessage(new Sporocilo(this.ime, besedilo));
 						Povezava.poslji_javno(this.ime, besedilo);
 						
 					} catch (ClientProtocolException e1) {
@@ -259,7 +247,7 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener, Wi
 				else {
 					String prejemnik = prejemnik_input.getText();
 					try {
-						addMessage(this.ime, besedilo);
+						addMessage(new Sporocilo(this.ime, prejemnik, besedilo));
 						Povezava.poslji_zasebno(this.ime, prejemnik, besedilo);
 					} catch (ClientProtocolException e1) {
 						// TODO Auto-generated catch block

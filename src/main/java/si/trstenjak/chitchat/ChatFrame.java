@@ -10,11 +10,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,7 +27,7 @@ import javax.swing.JScrollPane;
 import java.awt.Insets;
 import javax.swing.JButton;
 
-public class ChatFrame extends JFrame implements ActionListener, KeyListener, WindowListener {
+public class ChatFrame extends JFrame implements ActionListener, KeyListener{
 
 	/**
 	 * 
@@ -62,7 +60,6 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener, Wi
 		Container pane = this.getContentPane();
 		setTitle("Klepetalnik");
 		pane.setLayout(new GridBagLayout());
-		pane.setBackground(Color.lightGray);
 
 		
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -76,6 +73,8 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener, Wi
                 e.getWindow().dispose();
             }
         });
+		
+		
 		///// OUTPUT ///////
 		
 		this.output = new JTextArea(20,40);
@@ -174,12 +173,13 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener, Wi
 		
 		pane.add(drsnik_uporabniki, uporabniki_gbc);
 		
-		JLabel uporabniki_label = new JLabel("PRISOTNI UPORABNIKI:");
+		JLabel uporabniki_label = new JLabel("Prisotni uporabniki:");
 		GridBagConstraints uporabniki_label_gbc = new GridBagConstraints();
 		uporabniki_label_gbc.gridx = 3;
 		uporabniki_label_gbc.gridy = 0;
 		uporabniki_label_gbc.insets = new Insets (10, 10, 10, 10);
 		pane.add(uporabniki_label, uporabniki_label_gbc);
+		uporabniki_label.setForeground(Color.blue);
 		
 		this.napis_ob_prijavi = new JLabel("Niste prijavljeni.");
 		GridBagConstraints napis_gbc = new GridBagConstraints();
@@ -187,16 +187,18 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener, Wi
 		napis_gbc.gridy = 0;
 		napis_gbc.insets = new Insets (10, 10, 10, 10);
 		pane.add(napis_ob_prijavi, napis_gbc);
+		
+		this.napis_ob_prijavi.setForeground(Color.red);
 	}
 	
 	
 	public void izpisiPrijavljene () throws ClientProtocolException, IOException, URISyntaxException {
 		this.uporabniki.setText("");
 		ArrayList<Uporabnik> uporabniki = Povezava.uporabniki();
+		
 		for (Uporabnik x : uporabniki) {
 			String izpisani = this.uporabniki.getText();
 			this.uporabniki.setText(izpisani + x.getUsername() + " (last active:" + x.getLastActive() + ")\n");
-			
 		}
 	}
 	public void addMessage(Sporocilo s)
@@ -219,16 +221,19 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener, Wi
 			Povezava.prijavi(this.ime);
 			this.online = true;
 			this.napis_ob_prijavi.setText("Prijavljeni ste pod imenom " + this.ime + ".");
+			this.napis_ob_prijavi.setForeground(Color.black);
 			robot.activate();
 		} else if (e.getSource() == this.gumb_prijava){
 			this.ime= this.ime_input.getText();
 			Povezava.prijavi(this.ime);
 			this.online = true;
 			this.napis_ob_prijavi.setText("Prijavljeni ste pod imenom " + this.ime +".");
+			this.napis_ob_prijavi.setForeground(Color.black);
 			robot.activate();
 		} else if (e.getSource() == this.gumb_odjava){
 			Povezava.odjavi(this.ime);
 			this.napis_ob_prijavi.setText("Niste prijavljeni.");
+			this.napis_ob_prijavi.setForeground(Color.red);
 			this.online = false;
 		}
 	}
@@ -247,7 +252,7 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener, Wi
 				if (this.prejemnik_input.getText().equals("")) {
 					try {
 						addMessage(new Sporocilo(this.ime, besedilo));
-						Povezava.poslji_javno(this.ime, besedilo);
+						Povezava.poslji(true, this.ime, null, besedilo);
 						
 					} catch (ClientProtocolException e1) {
 						// TODO Auto-generated catch block
@@ -264,7 +269,7 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener, Wi
 					String prejemnik = prejemnik_input.getText();
 					try {
 						addMessage(new Sporocilo(this.ime, prejemnik, besedilo));
-						Povezava.poslji_zasebno(this.ime, prejemnik, besedilo);
+						Povezava.poslji(false, this.ime, prejemnik, besedilo);
 					} catch (ClientProtocolException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -293,49 +298,5 @@ public class ChatFrame extends JFrame implements ActionListener, KeyListener, Wi
 		
 	}
 
-
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	public void windowClosing(WindowEvent e) {
-		Povezava.odjavi(this.ime);
-		System.exit(0);
-		}
-
-
-		
-	
 
 }

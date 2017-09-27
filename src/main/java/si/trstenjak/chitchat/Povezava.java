@@ -83,7 +83,7 @@ public class Povezava {
 			throws URISyntaxException, ClientProtocolException, IOException{
 		
 		String time = Long.toString(new Date().getTime());
-		ObjectMapper mapper = new ObjectMapper(); //ObjectMapper: pretvarja JSON stringe v Java objekte in obratno
+		ObjectMapper mapper = new ObjectMapper();
 		URI uri = new URIBuilder("http://chitchat.andrej.com/messages")
 				.addParameter("username", ime).addParameter("stop-cache", time)
 				.build();
@@ -101,34 +101,26 @@ public class Povezava {
 	
 	////// Pošiljanje sporočil /////
 	
-	public static void poslji_javno(String posiljatelj, String besedilo) throws URISyntaxException, ClientProtocolException, IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		String time = Long.toString(new Date().getTime());
-		
-		URI uri = new URIBuilder("http://chitchat.andrej.com/messages")
-				.addParameter("username", posiljatelj).addParameter("stop-cache", time)
-				.build();
-		
-		Sporocilo sporocilo = new Sporocilo (posiljatelj, besedilo);
-		String jsonSporocilo = mapper.writeValueAsString(sporocilo);
-		
-		String responseBody = Request.Post(uri).
-				bodyString(jsonSporocilo, ContentType.APPLICATION_JSON)
-				.execute().returnContent().asString();
-		System.out.println(responseBody);
-	}
 	
-	public static void poslji_zasebno(String posiljatelj, String prejemnik, String besedilo) throws URISyntaxException, ClientProtocolException, IOException{
+	public static void poslji (Boolean javno, String posiljatelj, String prejemnik, String besedilo)
+			throws URISyntaxException, ClientProtocolException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		String time = Long.toString(new Date().getTime());
-		
+
 		URI uri = new URIBuilder("http://chitchat.andrej.com/messages")
 				.addParameter("username", posiljatelj).addParameter("stop-cache", time)
 				.build();
 		
-		Sporocilo sporocilo = new Sporocilo (posiljatelj, prejemnik, besedilo);
-		String jsonSporocilo = mapper.writeValueAsString(sporocilo);
+		Sporocilo sporocilo;
 		
+		if (javno) {
+			sporocilo = new Sporocilo(posiljatelj, besedilo);
+		}
+		else {
+			sporocilo = new Sporocilo (posiljatelj, prejemnik, besedilo);
+		}
+		
+		String jsonSporocilo = mapper.writeValueAsString(sporocilo);
 		String responseBody = Request.Post(uri).
 				bodyString(jsonSporocilo, ContentType.APPLICATION_JSON)
 				.execute().returnContent().asString();

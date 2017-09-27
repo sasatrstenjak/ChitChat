@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Sporocilo { //objekt Sporocilo z atributi javno, prejemnik, ..
+public class Sporocilo {
 	
 	private Boolean javno;
 	private String prejemnik;

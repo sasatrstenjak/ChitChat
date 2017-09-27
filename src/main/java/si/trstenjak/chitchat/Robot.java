@@ -42,7 +42,7 @@ public class Robot extends TimerTask {
 			}
 		
 	
-			/*try {
+			try {
 				chat.izpisiPrijavljene();
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
@@ -53,7 +53,7 @@ public class Robot extends TimerTask {
 			} catch (URISyntaxException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/
+			}
 		}
 		
 		else {
